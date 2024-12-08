@@ -49,8 +49,8 @@ services:
     network_mode: bridge
     restart: unless-stopped
     environment:
-      EXPORTER_USERNAME: [USERN_NAME]
-      EXPORTER_PASSWORD: [PASSWOR]
+      EXPORTER_USERNAME: [your-username@acme.tld]
+      EXPORTER_PASSWORD: [your-password]
     image: iamtheloki/tado-exporter:latest	
 ```
 
