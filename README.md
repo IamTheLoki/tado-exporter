@@ -15,7 +15,18 @@ If you just want to use it, you need nothing apart download and run the binary f
 
 ### Using Docker
 
-The exporter is also available as a [Docker image](docker pull iamtheloki/tado-exporter:latest or docker pull ghcr.io/iamtheloki/tado-exporter:latest).
+The exporter is also available as a Docker image:
+
+Docker Hub
+```
+docker pull iamtheloki/tado-exporter:latest
+```
+
+GitHub Docker Registry
+```
+docker pull ghcr.io/iamtheloki/tado-exporter:latest
+```
+
 You can run it using the following example and pass configuration environment variables:
 
 ```
