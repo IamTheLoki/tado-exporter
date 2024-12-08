@@ -34,7 +34,24 @@ $ docker run \
   -e 'EXPORTER_USERNAME=your-username@acme.tld' \
   -e 'EXPORTER_PASSWORD=your-password' \
   -p '9898:9898' \
-  iamtheloki/tado-exporter
+  --net=bridge \
+  iamtheloki/tado-exporter:latest
+```
+or use Docker Compose
+
+```
+name: tado-exporter
+services:
+  tado-exporter:
+    container_name: tado-exporter
+    ports:
+      - 9898:9898
+    network_mode: bridge
+    restart: unless-stopped
+    environment:
+      EXPORTER_USERNAME: [USERN_NAME]
+      EXPORTER_PASSWORD: [PASSWOR]
+    image: iamtheloki/tado-exporter:latest	
 ```
 
 ### From sources
