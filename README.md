@@ -1,10 +1,9 @@
 # Tado° Prometheus Exporter
 
-[![Push on branch](https://github.com/eko/tado-exporter/actions/workflows/master.yml/badge.svg)](https://github.com/eko/tado-exporter/actions/workflows/master.yml)
-
 This is a Prometheus exporter for [tado°](https://www.tado.com/) thermostatic handles.
 
-![Grafana dashboard](https://raw.githubusercontent.com/eko/tado-exporter/master/misc/screenshot.jpg)
+![Grafana dashboard](https://grafana.com/api/dashboards/13847/images/17713/image)
+https://grafana.com/grafana/dashboards/13847-tado-dashboard/
 
 ## Prerequisites
 
@@ -14,22 +13,9 @@ In case you want to develop on this project, you will need:
 
 If you just want to use it, you need nothing apart download and run the binary file in the next step.
 
-## Installation
-
-### Download binary
-
-You can download the latest version of the binary built for your architecture here:
-
-* Architecture **x86_64** [
-    [Linux](https://github.com/eko/tado-exporter/releases/latest/download/tado-exporter-v0.0.3-x86_64-unknown-linux-gnu.tar.gz)
-]
-* Architecture **arm** [
-    [Linux](https://github.com/eko/tado-exporter/releases/latest/download/tado-exporter-v0.0.3-arm-unknown-linux-gnueabihf.tar.gz)
-]
-
 ### Using Docker
 
-The exporter is also available as a [Docker image](https://hub.docker.com/r/ekofr/tado-exporter).
+The exporter is also available as a [Docker image](https://hub.docker.com/r/iamtheloki/tado-exporter).
 You can run it using the following example and pass configuration environment variables:
 
 ```
@@ -37,14 +23,14 @@ $ docker run \
   -e 'EXPORTER_USERNAME=your-username@acme.tld' \
   -e 'EXPORTER_PASSWORD=your-password' \
   -p '9898:9898' \
-  ekofr/tado-exporter:latest
+  iamtheloki/tado-exporter
 ```
 
 ### From sources
 
 Optionally, you can download and build it from the sources. You have to retrieve the project sources by using one of the following way:
 ```bash
-$ git clone https://github.com/eko/tado-exporter
+$ git clone https://github.com/IamTheLoki/tado-exporter
 ```
 
 Then, just build the binary:
@@ -129,7 +115,3 @@ scrape_configs:
 | tado_setting_temperature_value         | This represent the current temperature you asked/programmed in a zone            |
 | tado_sensor_temperature_value          | This represent the current temperature detected by sensor in a zone              |
 | tado_sensor_humidity_percentage        | This represent the current humidity % detected by sensor in a zone               |
-
-## Community welcome
-
-Please feel free to contribute to this project in order to make it evolve. You're very welcome.
