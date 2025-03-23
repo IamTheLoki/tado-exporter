@@ -1,5 +1,5 @@
 
-FROM --platform=$BUILDPLATFORM rust:slim-bullseye AS builder
+FROM --platform=$BUILDPLATFORM rust:slim-bookworm AS builder
 
 RUN apt update && \
     apt install -y ca-certificates libssl-dev libfindbin-libs-perl make && \
@@ -38,7 +38,7 @@ RUN cargo build --target ${TARGET} --release --target-dir /build && \
     cp /build/$TARGET/release/tado-exporter / && \
     rm -rf /build
 
-FROM --platform=$TARGETPLATFORM debian:bullseye-slim
+FROM --platform=$TARGETPLATFORM debian:bookworm-slim
 LABEL name="tado-exporter"
 
 ARG TARGETOS
