@@ -1,0 +1,45 @@
+name: Release tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-release:
+    name: Build and Create Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+    steps:
+      # Checkout mit aktualisierter v4-Version
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target=${{ matrix.target }}
+
+      - name: Package asset
+        run: tar -C target/${{ matrix.target }}/release -czf tado-exporter-${{ matrix.target }}.tar.gz tado-exporter
+
+      # Die neue, robuste Release-Action, die auch Assets direkt hochlädt
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          artifacts: ./tado-exporter-${{ matrix.target }}.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}
