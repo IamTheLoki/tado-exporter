@@ -206,7 +206,7 @@ pub fn set_weather(weather_response: Option<WeatherApiResponse>) {
         let solar_intensity_percentage = weather.solarIntensity.percentage;
 
         WEATHER_SOLAR_INTENSITY
-            .with_label_values(&[])
+            .with_label_values(&[] as &[&str]) // <-- Typ explizit angegeben
             .set(weather.solarIntensity.percentage);
         info!(
             "-> setting solar intensity (percentage): {}",
