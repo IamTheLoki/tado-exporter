@@ -20,6 +20,7 @@ lazy_static! {
     pub static ref BASE_URL: reqwest::Url = "https://my.tado.com/api/v2/".parse().unwrap();
 }
 
+#[allow(dead_code)]
 pub struct Client {
     http_client: reqwest::Client,
     base_url: reqwest::Url,
