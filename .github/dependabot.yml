@@ -1,15 +1,25 @@
 version: 2
 updates:
-- package-ecosystem: cargo
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "04:00"
-  open-pull-requests-limit: 10
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 10
+    # Das fasst alle Cargo-Updates in einem PR zusammen:
+    groups:
+      cargo-dependencies:
+        patterns:
+          - "*"
 
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "04:00"
-  open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 10
+    # Das fasst alle Docker-Updates in einem PR zusammen:
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"
