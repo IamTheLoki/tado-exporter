@@ -347,9 +347,8 @@ mod tests {
         // THEN
         let metrics = prometheus::gather();
 
-        // Da die Metriken über lazy_static global registriert sind, sind die
-        // Metrik-Familien im globalen Registry vorhanden. Wir stellen sicher,
-        // dass der Aufruf von `None` stabil durchläuft.
-        assert!(metrics.len() >= 2);
+        // Je nach Test-Reihenfolge ist die globale Registry entweder noch leer (0)
+        // oder der parallele "some"-Test hat die 2 Metrikfamilien bereits registriert.
+        assert!(metrics.len() == 0 || metrics.len() == 2);
     }
 }
