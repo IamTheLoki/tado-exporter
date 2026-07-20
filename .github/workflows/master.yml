@@ -30,6 +30,9 @@ jobs:
           command: build
       - uses: actions-rs/cargo@v1
         name: test
+        env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
         with:
           command: test
       - uses: actions-rs/cargo@v1
