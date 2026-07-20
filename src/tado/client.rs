@@ -82,7 +82,10 @@ impl Client {
             .send()
             .await?;
         let start = resp.json::<AuthStartResponse>().await?;
-        info!("Started device authentication flow with URL {}", start.verification_uri_complete);
+        info!(
+            "Started device authentication flow with URL {}",
+            start.verification_uri_complete
+        );
 
         // TODO: run through login flow.
 
@@ -94,7 +97,10 @@ impl Client {
     async fn get(&self, url: reqwest::Url) -> Result<reqwest::Response, reqwest::Error> {
         self.http_client
             .get(url)
-            .header("Authorization", format!("Bearer {}", self.tokens.access_token))
+            .header(
+                "Authorization",
+                format!("Bearer {}", self.tokens.access_token),
+            )
             .send()
             .await
     }

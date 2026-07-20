@@ -298,22 +298,39 @@ mod tests {
         assert_eq!(outside_temp_celsius.get_label().len(), 1);
         assert_eq!(outside_temp_celsius.get_label()[0].name(), "unit");
         assert_eq!(outside_temp_celsius.get_label()[0].value(), "celsius");
-        
+
         // .get() holt den f64-Wert sauber ab, ohne private Traits zu benötigen
         // Nutze .as_ref(), um an das innere Gauge-Objekt zu kommen, das get_value() bereitstellt
         // .value() statt .get_value() nutzen
-        assert_eq!(outside_temp_celsius.get_gauge().as_ref().unwrap().value(), 20.0);
-        
+        assert_eq!(
+            outside_temp_celsius.get_gauge().as_ref().unwrap().value(),
+            20.0
+        );
+
         assert_eq!(outside_temp_fahrenheit.get_label().len(), 1);
         assert_eq!(outside_temp_fahrenheit.get_label()[0].name(), "unit");
         assert_eq!(outside_temp_fahrenheit.get_label()[0].value(), "fahrenheit");
-        assert_eq!(outside_temp_fahrenheit.get_gauge().as_ref().unwrap().value(), 68.0);
+        assert_eq!(
+            outside_temp_fahrenheit
+                .get_gauge()
+                .as_ref()
+                .unwrap()
+                .value(),
+            68.0
+        );
 
         // Check solar intensity metric
         let solar_intensity_metric = metrics[1].get_metric();
 
         assert_eq!(solar_intensity_metric.len(), 1);
-        assert_eq!(solar_intensity_metric[0].get_gauge().as_ref().unwrap().value(), 100.0);
+        assert_eq!(
+            solar_intensity_metric[0]
+                .get_gauge()
+                .as_ref()
+                .unwrap()
+                .value(),
+            100.0
+        );
     }
 
     #[test]
