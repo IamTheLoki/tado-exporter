@@ -1,4 +1,3 @@
-
 FROM --platform=$BUILDPLATFORM rust:slim-bookworm AS builder
 
 RUN apt update && \
@@ -12,11 +11,13 @@ COPY src/ ./src
 RUN rustup toolchain install stable
 
 # Work only on AMD64, NO CROSS COMPILE Tested on Windows
-FROM builder as builder-amd64
+# KORREKTUR: 'as' zu 'AS' geändert
+FROM builder AS builder-amd64
 ENV TARGET=x86_64-unknown-linux-gnu
 
 # Work only on ARM64, NO CROSS COMPILE Tested OSX
-FROM builder as builder-arm64
+# KORREKTUR: 'as' zu 'AS' geändert
+FROM builder AS builder-arm64
 ENV TARGET=aarch64-unknown-linux-gnu
 RUN apt update && \
     apt install -y gcc-aarch64-linux-gnu && \
@@ -24,7 +25,8 @@ RUN apt update && \
 
 ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
 
-FROM builder as builder-armv7
+# KORREKTUR: 'as' zu 'AS' geändert
+FROM builder AS builder-armv7
 ENV TARGET=armv7-unknown-linux-gnueabihf
 RUN apt update && \
     apt install -y libc6-dev-armhf-cross gcc-arm-linux-gnueabihf && \
@@ -32,13 +34,15 @@ RUN apt update && \
 
 ENV CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc CC_armv7_unknown_Linux_gnueabihf=arm-linux-gnueabihf-gcc CXX_armv7_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++
 
-FROM builder-$TARGETARCH$TARGETVARIANT as final-builder
+# KORREKTUR: 'as' zu 'AS' geändert
+FROM builder-$TARGETARCH$TARGETVARIANT AS final-builder
 RUN rustup target add ${TARGET}
 RUN cargo build --target ${TARGET} --release --target-dir /build && \
     cp /build/$TARGET/release/tado-exporter / && \
     rm -rf /build
 
-FROM --platform=$TARGETPLATFORM debian:bookworm-slim
+# KORREKTUR: --platform=$TARGETPLATFORM entfernt, da redundant
+FROM debian:bookworm-slim
 LABEL name="tado-exporter"
 
 ARG TARGETOS
