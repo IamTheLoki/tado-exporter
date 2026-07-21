@@ -14,36 +14,29 @@ jobs:
         target:
           - x86_64-unknown-linux-gnu
     steps:
-      # Aktualisiert auf v4
       - uses: actions/checkout@v4
       
-      - uses: actions-rs/toolchain@v1
+      # Die neue, moderne Toolchain-Action
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
+          targets: ${{ matrix.target }}
           components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v1
+
+      - uses: Swatinem/rust-cache@v2 # Direkt auf v2 aktualisiert für besseren Support
         with:
           cache-on-failure: true
-      - uses: actions-rs/cargo@v1
-        name: build
-        with:
-          command: build
-      - uses: actions-rs/cargo@v1
-        name: test
+
+      - name: Build
+        run: cargo build --target ${{ matrix.target }}
+
+      - name: Test
         env:
           username: ${{ secrets.TADO_USERNAME }}
           password: ${{ secrets.TADO_PASSWORD }}
-        with:
-          command: test
-      - uses: actions-rs/cargo@v1
-        name: clippy
-        with:
-          command: clippy
-          args: -- -D warnings
-      - uses: actions-rs/cargo@v1
-        name: fmt
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo test --target ${{ matrix.target }}
+
+      - name: Clippy
+        run: cargo clippy --target ${{ matrix.target }} -- -D warnings
+
+      - name: Format Check
+        run: cargo fmt --all -- --check
