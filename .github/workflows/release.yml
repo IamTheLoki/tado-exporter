@@ -13,6 +13,12 @@ jobs:
   build-and-release:
     name: Build, Release and Docker Push
     runs-on: ubuntu-latest
+
+    # HIER EXPLIZIT EINTRAGEN: Überschreibt die Standard-Tokensicherheit für diesen Job
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
     strategy:
       matrix:
         target:
