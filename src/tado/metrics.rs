@@ -2,7 +2,7 @@ use std::convert::Infallible;
 
 use super::model::{WeatherApiResponse, ZoneStateResponse};
 
-use hyper::{header::CONTENT_TYPE, Body, Request, Response};
+use hyper::{Body, Request, Response, header::CONTENT_TYPE};
 use lazy_static::lazy_static;
 use log::info;
 use prometheus::{Encoder, GaugeVec, TextEncoder};

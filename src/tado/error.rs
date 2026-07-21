@@ -28,7 +28,8 @@ impl std::fmt::Display for AuthError {
 impl std::error::Error for AuthError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
-            AuthError::Http(ref inner) => Some(inner),
+            // KORREKTUR: 'ref' entfernt, da Rust 2024 das implizit via Match Ergonomics regelt
+            AuthError::Http(inner) => Some(inner),
             AuthError::Timeout => None,
             AuthError::UnexpectedStatus(_, _) => None,
         }
