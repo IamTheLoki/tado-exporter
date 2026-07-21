@@ -39,7 +39,7 @@ jobs:
 
       # Aktualisiert von @v1 auf @v2, um die veraltete Node 20 Umgebung loszuwerden
       - name: Create Release
-        uses: ncipollo/release-action@v2
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           tag: ${{ github.ref_name }}
