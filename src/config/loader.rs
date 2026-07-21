@@ -50,10 +50,13 @@ mod tests {
     #[test]
     fn test_config_load() {
         // Given no env variable are set
-        env::remove_var("EXPORTER_USERNAME");
-        env::remove_var("EXPORTER_PASSWORD");
-        env::remove_var("EXPORTER_TICKER");
-        env::remove_var("EXPORTER_CLIENT_ID");
+        // KORREKTUR: In unsafe-Block gepackt, da remove_var zu Data Races führen kann
+        unsafe {
+            env::remove_var("EXPORTER_USERNAME");
+            env::remove_var("EXPORTER_PASSWORD");
+            env::remove_var("EXPORTER_TICKER");
+            env::remove_var("EXPORTER_CLIENT_ID");
+        }
 
         // when
         let config = load();
@@ -65,10 +68,13 @@ mod tests {
         assert_eq!(config.client_id, "1bb50063-6b0c-4d11-bd99-387f4a91cc46");
 
         // given the following environment variable values
-        env::set_var("EXPORTER_USERNAME", "test-user");
-        env::set_var("EXPORTER_PASSWORD", "123Password!");
-        env::set_var("EXPORTER_TICKER", "30");
-        env::set_var("EXPORTER_CLIENT_ID", "client-123");
+        // KORREKTUR: In unsafe-Block gepackt, da set_var im Multithreading-Testlauf unsauber sein kann
+        unsafe {
+            env::set_var("EXPORTER_USERNAME", "test-user");
+            env::set_var("EXPORTER_PASSWORD", "123Password!");
+            env::set_var("EXPORTER_TICKER", "30");
+            env::set_var("EXPORTER_CLIENT_ID", "client-123");
+        }
 
         // when
         let config = load();
