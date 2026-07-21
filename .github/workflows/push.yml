@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Die neue, moderne Toolchain-Action
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
           components: rustfmt, clippy
 
-      - uses: Swatinem/rust-cache@v2 # Direkt auf v2 aktualisiert für besseren Support
+      # Aktualisiert auf die neueste Version, um Node-Warnungen zu vermeiden
+      - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
 

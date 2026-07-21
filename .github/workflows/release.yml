@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Moderne Toolchain für den Release-Build
+      # Moderne Toolchain ohne Node-Abhängigkeiten
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
@@ -31,8 +31,9 @@ jobs:
       - name: Package asset
         run: tar -C target/${{ matrix.target }}/release -czf tado-exporter-${{ matrix.target }}.tar.gz tado-exporter
 
+      # Aktualisiert von @v1 auf @v2, um die veraltete Node 20 Umgebung loszuwerden
       - name: Create Release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v2
         with:
           allowUpdates: true
           tag: ${{ github.ref_name }}
