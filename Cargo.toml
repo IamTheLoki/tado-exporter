@@ -1,13 +1,12 @@
 [package]
 name = "tado-exporter"
-version = "2.0.11"
+version = "2.1.0"
 authors = ["Vincent Composieux <vincent@composieux.fr>"]
 edition = "2024"
 
 [dependencies]
 hyper = { version = "0.14", features = ["server", "runtime", "http1", "http2"] }
 tokio = { version = "1", features = ["full"] }
-lazy_static = "1.5"
 prometheus = "0.14"
 reqwest = { version = "0.13", features = ["json", "form"] }
 serde = "1.0"

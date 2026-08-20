@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 use std::vec::Vec;
 
-use lazy_static::lazy_static;
+use std::sync::LazyLock;
 use log::{error, info};
 use reqwest;
 
@@ -13,12 +13,13 @@ use super::model::{
 
 const AUTH_PENDING_MESSAGE: &str = "authorization_pending";
 
-lazy_static! {
-    // TODO: POST DEVICE - https://login.tado.com/oauth2/device
-    static ref AUTH_START_URL: reqwest::Url = "https://login.tado.com/oauth2/device_authorize".parse().unwrap();
-    static ref AUTH_TOKEN_URL: reqwest::Url = "https://login.tado.com/oauth2/token".parse().unwrap();
-    pub static ref BASE_URL: reqwest::Url = "https://my.tado.com/api/v2/".parse().unwrap();
-}
+static AUTH_START_URL: LazyLock<reqwest::Url> =
+    LazyLock::new(|| "https://login.tado.com/oauth2/device_authorize".parse().unwrap());
+static AUTH_TOKEN_URL: LazyLock<reqwest::Url> =
+    LazyLock::new(|| "https://login.tado.com/oauth2/token".parse().unwrap());
+pub static BASE_URL: LazyLock<reqwest::Url> =
+    LazyLock::new(|| "https://my.tado.com/api/v2/".parse().unwrap());
+
 
 #[allow(dead_code)]
 pub struct Client {

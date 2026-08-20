@@ -1801,12 +1801,11 @@ dependencies = [
 
 [[package]]
 name = "tado-exporter"
-version = "2.0.11"
+version = "2.1.0"
 dependencies = [
  "actix-rt",
  "env_logger",
  "hyper 0.14.32",
- "lazy_static",
  "log",
  "openssl",
  "prometheus",
