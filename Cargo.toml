@@ -1,6 +1,6 @@
 [package]
 name = "tado-exporter"
-version = "2.0.10"
+version = "2.0.11"
 authors = ["Vincent Composieux <vincent@composieux.fr>"]
 edition = "2024"
 
