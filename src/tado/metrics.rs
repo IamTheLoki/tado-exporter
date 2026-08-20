@@ -3,9 +3,9 @@ use std::convert::Infallible;
 use super::model::{WeatherApiResponse, ZoneStateResponse};
 
 use hyper::{Body, Request, Response, header::CONTENT_TYPE};
-use std::sync::LazyLock;
 use log::info;
 use prometheus::{Encoder, GaugeVec, TextEncoder};
+use std::sync::LazyLock;
 
 pub static ACTIVITY_HEATING_POWER: LazyLock<GaugeVec> = LazyLock::new(|| {
     register_gauge_vec!(
