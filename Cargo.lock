@@ -1806,7 +1806,6 @@ dependencies = [
  "actix-rt",
  "env_logger",
  "hyper 0.14.32",
- "lazy_static",
  "log",
  "openssl",
  "prometheus",

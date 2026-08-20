@@ -3,60 +3,81 @@ use std::convert::Infallible;
 use super::model::{WeatherApiResponse, ZoneStateResponse};
 
 use hyper::{Body, Request, Response, header::CONTENT_TYPE};
-use lazy_static::lazy_static;
+use std::sync::LazyLock;
 use log::info;
 use prometheus::{Encoder, GaugeVec, TextEncoder};
 
-lazy_static! {
-    pub static ref ACTIVITY_HEATING_POWER: GaugeVec = register_gauge_vec!(
+pub static ACTIVITY_HEATING_POWER: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_activity_heating_power_percentage",
         "The % of heating power in a specific zone.",
         &["zone", "type"]
     )
-    .unwrap();
-    pub static ref ACTIVITY_AC_POWER: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static ACTIVITY_AC_POWER: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_activity_ac_power_value",
         "The value of ac power in a specific zone.",
         &["zone", "type"]
     )
-    .unwrap();
-    pub static ref SETTING_TEMPERATURE: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static SETTING_TEMPERATURE: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_setting_temperature_value",
         "The temperature of a specific zone in celsius degres.",
         &["zone", "type", "unit"]
     )
-    .unwrap();
-    pub static ref SENSOR_TEMPERATURE: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static SENSOR_TEMPERATURE: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_sensor_temperature_value",
         "The temperature of a specific zone in celsius degres.",
         &["zone", "type", "unit"]
     )
-    .unwrap();
-    pub static ref SENSOR_HUMIDITY_PERCENTAGE: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static SENSOR_HUMIDITY_PERCENTAGE: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_sensor_humidity_percentage",
         "The % of humidity in a specific zone.",
         &["zone", "type"]
     )
-    .unwrap();
-    pub static ref WEATHER_SOLAR_INTENSITY: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static WEATHER_SOLAR_INTENSITY: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "weather_solar_intensity",
         "Solar intensity outside the house.",
         &[]
     )
-    .unwrap();
-    pub static ref WEATHER_OUTSIDE_TEMPERATURE: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static WEATHER_OUTSIDE_TEMPERATURE: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "weather_outside_temperature",
         "Temperature outside the house.",
         &["unit"]
     )
-    .unwrap();
-    pub static ref SENSOR_WINDOW_OPENED: GaugeVec = register_gauge_vec!(
+    .unwrap()
+});
+
+pub static SENSOR_WINDOW_OPENED: LazyLock<GaugeVec> = LazyLock::new(|| {
+    register_gauge_vec!(
         "tado_sensor_window_opened",
         "1 if the sensor detected a window is open, 0 otherwise.",
         &["zone", "type"]
     )
-    .unwrap();
-}
+    .unwrap()
+});
 
 pub fn set_zones(zones: Vec<ZoneStateResponse>) {
     for zone in zones {
