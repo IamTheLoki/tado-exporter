@@ -9,7 +9,7 @@ hyper = { version = "0.14", features = ["server", "runtime", "http1", "http2"] }
 tokio = { version = "1", features = ["full"] }
 lazy_static = "1.5"
 prometheus = "0.14"
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.13", features = ["json"] }
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
@@ -19,5 +19,5 @@ openssl = { version = "0.10", features = ["vendored"] }
 
 [dev-dependencies]
 actix-rt = "2.11"
-rstest = "0.17"
+rstest = "0.26"
 wiremock = "0.6"
