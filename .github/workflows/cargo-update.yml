@@ -1,0 +1,32 @@
+name: Scheduled Cargo Update
+
+on:
+  schedule:
+    # Jeden Montag um 04:00 Uhr UTC
+    - cron: '0 4 * * 1'
+  workflow_dispatch: # Erlaubt manuelle Ausführung über den Actions-Tab
+
+jobs:
+  cargo-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Update Cargo.lock
+        run: cargo update
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(deps): update Cargo.lock"
+          title: "chore(deps): weekly cargo update"
+          body: |
+            Automated update of `Cargo.lock` via `cargo update`.
+            This keeps transitive dependencies up to date and prevents Dependabot index resolution errors.
+          branch: automated-cargo-update
+          delete-branch: true
