@@ -2,8 +2,9 @@
 
 This is a Prometheus exporter for [tado°](https://www.tado.com/) thermostatic handles.
 
-![Grafana dashboard](https://grafana.com/api/dashboards/13847/images/17713/image)
-https://grafana.com/grafana/dashboards/13847-tado-dashboard/
+![Grafana dashboard](misc/screenshot_1.png) 
+![Grafana dashboard](misc/screenshot_2.png)
+[Grafana Dashboard Template](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
 
 ## Prerequisites
 
