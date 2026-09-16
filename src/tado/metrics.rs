@@ -370,6 +370,6 @@ mod tests {
 
         // Je nach Test-Reihenfolge ist die globale Registry entweder noch leer (0)
         // oder der parallele "some"-Test hat die 2 Metrikfamilien bereits registriert.
-        assert!(metrics.len() == 0 || metrics.len() == 2);
+        assert!(metrics.is_empty() || metrics.len() == 2);
     }
 }

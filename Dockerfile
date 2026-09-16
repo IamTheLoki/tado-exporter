@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM rust:slim-bookworm AS builder
+FROM rust:slim-bookworm AS builder
 
 RUN apt update && \
     apt install -y ca-certificates libssl-dev libfindbin-libs-perl make && \
@@ -8,64 +8,18 @@ WORKDIR /usr/src/tado-exporter
 
 COPY Cargo.* .
 COPY src/ ./src
-RUN rustup toolchain install stable
 
-# Work only on AMD64, NO CROSS COMPILE Tested on Windows
-# KORREKTUR: 'as' zu 'AS' geändert
-FROM builder AS builder-amd64
-ENV TARGET=x86_64-unknown-linux-gnu
+RUN rustup toolchain install stable && \
+    cargo build --release && \
+    cp target/release/tado-exporter /tado-exporter
 
-# Work only on ARM64, NO CROSS COMPILE Tested OSX
-# KORREKTUR: 'as' zu 'AS' geändert
-FROM builder AS builder-arm64
-ENV TARGET=aarch64-unknown-linux-gnu
-RUN apt update && \
-    apt install -y gcc-aarch64-linux-gnu && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
-
-# KORREKTUR: 'as' zu 'AS' geändert
-FROM builder AS builder-armv7
-ENV TARGET=armv7-unknown-linux-gnueabihf
-RUN apt update && \
-    apt install -y libc6-dev-armhf-cross gcc-arm-linux-gnueabihf && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc CC_armv7_unknown_Linux_gnueabihf=arm-linux-gnueabihf-gcc CXX_armv7_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++
-
-# KORREKTUR: 'as' zu 'AS' geändert
-FROM builder-$TARGETARCH$TARGETVARIANT AS final-builder
-RUN rustup target add ${TARGET}
-RUN cargo build --target ${TARGET} --release --target-dir /build && \
-    cp /build/$TARGET/release/tado-exporter / && \
-    rm -rf /build
-
-# KORREKTUR: --platform=$TARGETPLATFORM entfernt, da redundant
 FROM debian:bookworm-slim
 LABEL name="tado-exporter"
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
-ARG TARGETPLATFORM
-ARG BUILDOS
-ARG BUILDARCH
-ARG BUILDVARIANT
-ARG BUILDPLATFORM
-
-RUN echo "I'm building for $TARGETOS/$TARGETARCH/$TARGETVARIANT"
-RUN echo "I'm building on $BUILDOS/$BUILDARCH/$BUILDVARIANT"
-
-RUN echo "builder-$TARGETARCH$TARGETVARIANT"
-
 RUN apt update && \
-    if [ "$TARGETARCH$TARGETVARIANT" -eq "armv7"]; then apt install patchelf; fi && \
+    apt install -y ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=final-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=final-builder /tado-exporter /usr/bin/
-
-RUN if [ "$TARGETARCH$TARGETVARIANT" -eq "armv7"]; then patchelf --set-interpreter /lib/ld-linux-armhf.so.3 /tado-exporter; fi
+COPY --from=builder /tado-exporter /usr/bin/tado-exporter
 
 CMD ["tado-exporter"]

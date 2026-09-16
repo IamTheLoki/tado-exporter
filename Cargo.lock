@@ -1847,7 +1847,7 @@ dependencies = [
 
 [[package]]
 name = "tado-exporter"
-version = "2.1.0"
+version = "2.1.2"
 dependencies = [
  "actix-rt",
  "env_logger",
