@@ -1,3 +1,13 @@
 /.git
 /target
 **/.rk.bk
+
+# macOS
+.DS_Store
+
+# Documentation
+CHANGELOG.md
+README.md
+
+# CI/CD
+.github/
