@@ -15,7 +15,7 @@ A lightweight, high-performance [Prometheus](https://prometheus.io/) exporter wr
 Integrate seamless smart home monitoring into your Grafana setups.
 
 | Main Overview | Zone Breakdown |
-|:---:|:---:|
+| :-----------: | :------------: |
 | ![Grafana dashboard 1](misc/screenshot_1.png) | ![Grafana dashboard 2](misc/screenshot_2.png) |
 
 👉 **Official Grafana Dashboard Template:** [Dashboards / 13847-tado-dashboard](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
@@ -56,6 +56,7 @@ services:
 ```
 
 Run with:
+
 ```bash
 docker compose up -d
 ```
