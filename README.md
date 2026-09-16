@@ -1,6 +1,7 @@
 # 🌡️ tado° Prometheus Exporter
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/iamtheloki/tado-exporter?style=for-the-badge&logo=docker&logoColor=white&color=0080FF)](https://hub.docker.com/r/iamtheloki/tado-exporter)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-iamtheloki%2Ftado--exporter-099cec?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/iamtheloki/tado-exporter)
 [![GitHub Container Registry](https://img.shields.io/badge/GHCR-ghcr.io%2Fiamtheloki%2Ftado--exporter-blue?style=for-the-badge&logo=github)](https://github.com/IamTheLoki/tado-exporter/pkgs/container/tado-exporter)
 [![Rust](https://img.shields.io/badge/Rust-2024_Edition-orange?style=for-the-badge&logo=rust)](https://www.rust-lang.org/)
 [![Grafana](https://img.shields.io/badge/Grafana-Dashboard_13847-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
