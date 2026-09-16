@@ -6,6 +6,7 @@
 .DS_Store
 
 # Documentation
+AGENT.md
 CHANGELOG.md
 README.md
 
