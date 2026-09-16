@@ -1,146 +1,140 @@
-# Tado° Prometheus Exporter
+# 🌡️ tado° Prometheus Exporter
 
-This is a Prometheus exporter for [tado°](https://www.tado.com/) thermostatic handles.
+[![Docker Pulls](https://img.shields.io/docker/pulls/iamtheloki/tado-exporter?style=for-the-badge&logo=docker&logoColor=white&color=0080FF)](https://hub.docker.com/r/iamtheloki/tado-exporter)
+[![GitHub Container Registry](https://img.shields.io/badge/GHCR-ghcr.io%2Fiamtheloki%2Ftado--exporter-blue?style=for-the-badge&logo=github)](https://github.com/IamTheLoki/tado-exporter/pkgs/container/tado-exporter)
+[![Rust](https://img.shields.io/badge/Rust-2024_Edition-orange?style=for-the-badge&logo=rust)](https://www.rust-lang.org/)
+[![Grafana](https://img.shields.io/badge/Grafana-Dashboard_13847-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
 
-![Grafana dashboard](misc/screenshot_1.png) 
-![Grafana dashboard](misc/screenshot_2.png)
-[Grafana Dashboard Template](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
+A lightweight, high-performance [Prometheus](https://prometheus.io/) exporter written in Rust for [tado°](https://www.tado.com/) smart climate control systems.
 
-## Prerequisites
+---
 
-In case you want to develop on this project, you will need:
+## 📊 Dashboards & Visualizations
 
-* [Rust](https://www.rust-lang.org/)
+Integrate seamless smart home monitoring into your Grafana setups.
 
-If you just want to use it, you need nothing apart download and run the binary file in the next step.
+| Main Overview | Zone Breakdown |
+|:---:|:---:|
+| ![Grafana dashboard 1](misc/screenshot_1.png) | ![Grafana dashboard 2](misc/screenshot_2.png) |
 
-### Using Docker
+👉 **Official Grafana Dashboard Template:** [Dashboards / 13847-tado-dashboard](https://grafana.com/grafana/dashboards/13847-tado-dashboard/)
 
-The exporter is also available as a Docker image:
+---
 
-Docker Hub
-```
-docker pull iamtheloki/tado-exporter:latest
-```
+## ✨ Features
 
-GitHub Docker Registry
-```
-docker pull ghcr.io/iamtheloki/tado-exporter:latest
-```
+- **Zone Metrics:** Target temperatures, actual temperatures, humidity, heating power percentage, and AC power status.
+- **Window Open Detection:** Gauge metric indicating whether an open window is detected per zone.
+- **Outside Weather Data:** Outside ambient temperature and solar intensity percentages.
+- **Drift-Free Interval Ticker:** Uses async Tokio intervals to ensure precise metrics retrieval without scheduling drift.
+- **Low Footprint:** Built with Rust, Tokio, and Hyper for minimal memory and CPU usage.
 
-You can run it using the following example and pass configuration environment variables:
+---
 
-```
-$ docker run \
-  -e 'EXPORTER_USERNAME=your-username@acme.tld' \
-  -e 'EXPORTER_PASSWORD=your-password' \
-  -p '9898:9898' \
-  --net=bridge \
-  iamtheloki/tado-exporter:latest
-```
-or use Docker Compose
+## 🚀 Quick Start
 
-```
-name: tado-exporter
+### Option 1: Docker Compose (Recommended)
+
+Add `tado-exporter` to your `docker-compose.yml`:
+
+```yaml
+version: "3.8"
+
 services:
   tado-exporter:
+    image: ghcr.io/iamtheloki/tado-exporter:latest
     container_name: tado-exporter
-    ports:
-      - 9898:9898
-    network_mode: bridge
     restart: unless-stopped
+    ports:
+      - "9898:9898"
+    network_mode: bridge
     environment:
-      EXPORTER_USERNAME: [your-username@acme.tld]
-      EXPORTER_PASSWORD: [your-password]
-    image: iamtheloki/tado-exporter:latest	
+      EXPORTER_USERNAME: "your-email@example.com"
+      EXPORTER_PASSWORD: "your-password"
+      EXPORTER_TICKER: "10"
 ```
 
-### From sources
-
-Optionally, you can download and build it from the sources. You have to retrieve the project sources by using one of the following way:
+Run with:
 ```bash
-$ git clone https://github.com/IamTheLoki/tado-exporter
+docker compose up -d
 ```
 
-Then, just build the binary:
-
-```
-$ cargo build --release
-```
-
-## Usage
-
-In order to run the exporter, type the following command (arguments are optional):
+### Option 2: Docker CLI
 
 ```bash
-$ export EXPORTER_TICKER=10
-$ export EXPORTER_USERNAME="my-username@acme.tld"
-$ export EXPORTER_PASSWORD="your-password"
-$ ./tado-exporter
---- tado° exporter configuration ---
-Ticker seconds: 10
-Username: my-username@acme.tld
-Password: your-password
-Client secret: wZaRN7rpjn3FoNyF5IFuxg9uMzYJcvOoQ8QWiIqS3hfk6gLhVlG57j5YNoZL2Rtc
-------------------------------------
-[2020-02-29T08:56:19Z INFO  tado_exporter] starting tado° exporter on address: V4(0.0.0.0:9898)
-[2020-02-29T08:56:19Z INFO  tado_exporter] waiting for the first tick in 10 seconds...
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::client] retrieving zone details for Office...
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::client] retrieving zone details for Kitchen...
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::client] retrieving zone details for Living Room...
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::client] retrieving zone details for Room...
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> setting temperature (celsius): 23
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> setting temperature (fahrenheit): 73.4
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> sensor temperature (celsius): 23.75
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> sensor temperature (fahrenheit): 74.75
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> sensor humidity: 40.1%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Office -> heating power: 38%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> setting temperature (celsius): 22
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> setting temperature (fahrenheit): 71.6
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> sensor temperature (celsius): 22.03
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> sensor temperature (fahrenheit): 71.65
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> sensor humidity: 42.7%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Kitchen -> heating power: 0%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> setting temperature (celsius): 22
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> setting temperature (fahrenheit): 71.6
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> sensor temperature (celsius): 22.49
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> sensor temperature (fahrenheit): 72.48
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> sensor humidity: 42.2%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Living Room -> heating power: 0%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> setting temperature (celsius): 20
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> setting temperature (fahrenheit): 68
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> sensor temperature (celsius): 21.42
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> sensor temperature (fahrenheit): 70.56
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> sensor humidity: 45.8%
-[2020-02-29T08:56:30Z INFO  tado_exporter::tado::metrics] -> Room -> heating power: 0%
-...
+docker run -d \
+  --name tado-exporter \
+  -p 9898:9898 \
+  -e EXPORTER_USERNAME="your-email@example.com" \
+  -e EXPORTER_PASSWORD="your-password" \
+  ghcr.io/iamtheloki/tado-exporter:latest
 ```
 
-Once the exporter is running, you also have to update your `prometheus.yml` configuration to let it scrape the exporter:
+*Note: You can also use `iamtheloki/tado-exporter:latest` from Docker Hub.*
+
+### Option 3: Building from Source
+
+**Prerequisites:** [Rust & Cargo](https://rustup.rs/)
+
+```bash
+# Clone the repository
+git clone https://github.com/IamTheLoki/tado-exporter.git
+cd tado-exporter
+
+# Build release binary
+cargo build --release
+
+# Run exporter
+export EXPORTER_USERNAME="your-email@example.com"
+export EXPORTER_PASSWORD="your-password"
+./target/release/tado-exporter
+```
+
+---
+
+## ⚙️ Configuration
+
+Configure the exporter using environment variables:
+
+| Environment Variable | Default | Required | Description |
+| :--- | :---: | :---: | :--- |
+| `EXPORTER_USERNAME` | — | **Yes** | Your tado° account username / email address |
+| `EXPORTER_PASSWORD` | — | **Yes** | Your tado° account password |
+| `EXPORTER_CLIENT_ID` | `1bb50063-...` | No | OAuth client ID for tado° API authentication |
+| `EXPORTER_TICKER` | `10` | No | Fetch interval in seconds |
+| `RUST_LOG` | `info` | No | Logging verbosity (`error`, `warn`, `info`, `debug`, `trace`) |
+
+---
+
+## 📈 Exported Metrics
+
+| Metric Name | Type | Labels | Description |
+| :--- | :---: | :--- | :--- |
+| `tado_sensor_temperature_value` | Gauge | `zone`, `type`, `unit` | Temperature detected by sensor in zone (`celsius` or `fahrenheit`) |
+| `tado_setting_temperature_value` | Gauge | `zone`, `type`, `unit` | Programmed target temperature in zone (`celsius` or `fahrenheit`) |
+| `tado_sensor_humidity_percentage` | Gauge | `zone`, `type` | Relative humidity percentage detected in zone |
+| `tado_activity_heating_power_percentage` | Gauge | `zone`, `type` | Current heating power percentage per zone (0–100%) |
+| `tado_activity_ac_power_value` | Gauge | `zone`, `type` | AC power status per zone (`1.0` = ON, `0.0` = OFF) |
+| `tado_sensor_window_opened` | Gauge | `zone`, `type` | Open window detection state (`1.0` = open, `0.0` = closed) |
+| `weather_outside_temperature` | Gauge | `unit` | Outside ambient temperature (`celsius` or `fahrenheit`) |
+| `weather_solar_intensity` | Gauge | — | Outside solar intensity percentage |
+
+---
+
+## 🔍 Prometheus Configuration
+
+Add the scraping job to your `prometheus.yml`:
 
 ```yaml
 scrape_configs:
-  - job_name: 'tado'
+  - job_name: "tado"
+    scrape_interval: 15s
     static_configs:
-      - targets: ['localhost:9898']
+      - targets: ["tado-exporter:9898"]
 ```
 
-## Available environment variables
+---
 
-| Environment variable name    | Description                                                                                |
-|:----------------------------:|--------------------------------------------------------------------------------------------|
-| EXPORTER_USERNAME      | Required. This represent your tado° account username/email                                       |
-| EXPORTER_PASSWORD      | Required. This represent your tado° account password                                             |
-| EXPORTER_CLIENT_SECRET | Optional. This represent your tado° account client secret, using default value seems to work     |
-| EXPORTER_TICKER        | Optional (default: 10). This represent the number of seconds the exporter will look for new data |
-| RUST_LOG               | Optional (default: info). This describes the log level (see https://docs.rs/env_logger/)         |
+## 📄 License
 
-## Available Prometheus metrics
-
-| Metric name                  | Description                                                                                |
-|:----------------------------:|--------------------------------------------------------------------------------------------|
-| tado_activity_ac_power_value           | This represent the value (1.0 = ON, 0.0 = OFF) of ac power for every zone        |
-| tado_activity_heating_power_percentage | This represent the % of heating power for every zone                             |
-| tado_setting_temperature_value         | This represent the current temperature you asked/programmed in a zone            |
-| tado_sensor_temperature_value          | This represent the current temperature detected by sensor in a zone              |
-| tado_sensor_humidity_percentage        | This represent the current humidity % detected by sensor in a zone               |
+This project is licensed under the terms of the repository license. See [LICENSE](LICENSE) for details.
