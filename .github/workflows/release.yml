@@ -49,6 +49,7 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
+          provenance: false
           # KORREKTUR: Nutzt ${{ env.GHCR_REPO }} statt ${{ github.repository }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/tado-exporter:latest
